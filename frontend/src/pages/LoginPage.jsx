@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
 import { Mail, BarChart3, Shield, Zap } from 'lucide-react'
-import { authApi, emailApi } from "../utils/api";
+import { authApi, emailApi, analyticsApi } from "../utils/api";
 
 const features = [
     { icon: BarChart3, text: 'Volume trends & patterns' },

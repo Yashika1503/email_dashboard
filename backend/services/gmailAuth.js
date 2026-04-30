@@ -18,7 +18,7 @@ const SCOPES = [
 /**
  * Create a new OAuth2 client instance
  */
-function createOAuth2Client() {
+const createOAuth2Client = () => {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
     const redirectUri = process.env.GOOGLE_REDIRECT_URI;
@@ -120,5 +120,6 @@ module.exports = {
     getAuthenticatedClient,
     storeTokens,
     getUserInfo,
-    SCOPES
+    SCOPES,
+    createOAuth2Client
 };

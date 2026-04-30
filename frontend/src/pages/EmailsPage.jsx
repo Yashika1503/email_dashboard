@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Search, Filter, Mail, ChevronLeft, ChevronRight, RefreshCw, X } from 'lucide-react'
-import { authApi, emailApi } from "../utils/api";
+import { authApi, emailApi, analyticsApi } from "../utils/api";
 import { format } from 'date-fns'
 
 function EmailRow({ email }) {
