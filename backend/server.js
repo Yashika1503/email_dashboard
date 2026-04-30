@@ -11,7 +11,6 @@ const session = require('express-session');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
-const logger = require('./utils/logger');
 
 // Route imports
 const authRoutes = require('./routes/auth');
@@ -25,7 +24,7 @@ const PORT = process.env.PORT || 3001;
 const dataDir = path.dirname(process.env.DB_PATH || './data/email_dashboard.db');
 if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
-    logger.info(`Created data directory: ${dataDir}`);
+    console.log(`Created data directory: ${dataDir}`);
 }
 
 // ── Security Middleware ───────────────────────────────────────────
@@ -78,7 +77,7 @@ app.get('/health', (req, res) => {
 
 // ── Global Error Handler ──────────────────────────────────────────
 app.use((err, req, res, _next) => {
-    logger.error('Unhandled error:', { error: err.message, stack: err.stack });
+    console.error('Unhandled error:', { error: err.message, stack: err.stack });
     res.status(err.status || 500).json({
         error: process.env.NODE_ENV === 'production'
             ? 'Internal server error'
