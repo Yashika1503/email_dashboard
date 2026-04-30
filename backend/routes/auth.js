@@ -4,7 +4,8 @@ const {
     getAuthUrl,
     exchangeCodeForTokens,
     getUserInfo,
-    createOAuth2Client
+    createOAuth2Client,
+    storeTokens  // ← ADD THIS IMPORT
 } = require('../services/gmailAuth');
 
 // Step 1: Redirect to Google
@@ -15,31 +16,44 @@ router.get('/google', (req, res) => {
 
 // Step 2: Callback
 router.get('/google/callback', async (req, res) => {
-    const { code } = req.query;
+    const { code, error } = req.query;  // ← must be FIRST
+
+    if (error) {
+        return res.redirect(`${process.env.FRONTEND_URL}?error=${error}`);
+    }
 
     if (!code) {
-        return res.send('No code received');
+        return res.redirect(`${process.env.FRONTEND_URL}?error=no_code`);
+    }
+
+    if (req.session.userId) {
+        return res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
     }
 
     try {
         const tokens = await exchangeCodeForTokens(code);
-
         const client = createOAuth2Client();
         client.setCredentials(tokens);
-
         const userInfo = await getUserInfo(client);
+        const userId = userInfo.id || userInfo.email;
 
-        req.session.userId = userInfo.id || userInfo.email;
+        storeTokens(userId, tokens);
+
+        req.session.userId = userId;
         req.session.tokens = tokens;
         req.session.user = userInfo;
 
-        req.session.save(() => {
-            res.redirect('http://localhost:3000/dashboard');
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.send('Session error');
+            }
+            res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
         });
 
     } catch (err) {
-        console.error(err);
-        res.send('Auth failed');
+        console.error('Auth callback error:', err);
+        res.send('Auth failed: ' + err.message);
     }
 });
 
@@ -48,7 +62,6 @@ router.get('/me', (req, res) => {
     if (!req.session || !req.session.userId) {
         return res.status(401).json({ error: 'Not logged in' });
     }
-
     res.json(req.session.user);
 });
 

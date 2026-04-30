@@ -58,13 +58,14 @@ app.options('*', cors());
 app.use(express.json({ limit: '10mb' }));
 
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'dev-secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
+        secure: false,       // ← must be false for http://localhost
         httpOnly: true,
-        sameSite: 'lax', // keep this
+        sameSite: 'lax',     // ← 'lax' allows redirect-back from Google
+        maxAge: 7 * 24 * 60 * 60 * 1000  // 1 week
     }
 }));
 

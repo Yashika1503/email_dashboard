@@ -7,13 +7,25 @@ const db = new Database(dbPath);
 // ─────────────────────────────────────────────
 // TABLE SETUP
 // ─────────────────────────────────────────────
+
+// ✅ FIX 1: Added missing `tokens` table
+db.exec(`
+CREATE TABLE IF NOT EXISTS tokens (
+    user_id TEXT PRIMARY KEY,
+    access_token TEXT,
+    refresh_token TEXT,
+    token_expiry TEXT,
+    scope TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+`);
+
+// ✅ FIX 2: Removed stray token columns + added missing comma after token_expiry
 db.exec(`
 CREATE TABLE IF NOT EXISTS emails (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id TEXT NOT NULL,
-    access_token TEXT,
-    refresh_token TEXT,
-    token_expiry TEXT
     gmail_id TEXT UNIQUE,
     thread_id TEXT,
     subject TEXT,

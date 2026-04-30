@@ -22,9 +22,9 @@ async function apiFetch(url, options = {}) {
 // AUTH
 // ─────────────────────────────────────────────
 export const authApi = {
-    loginUrl: '/api/auth/google',
-    getUser: () => apiFetch('/api/auth/me'),
-    logout: () => apiFetch('/api/auth/logout', { method: 'POST' })
+    loginUrl: '/api/auth/google',                          // ← this is fine, not using apiFetch
+    getUser: () => apiFetch('/auth/me'),                   // ✅ was '/api/auth/me'
+    logout: () => apiFetch('/auth/logout', { method: 'POST' }) // ✅ was '/api/auth/logout'
 };
 
 // ─────────────────────────────────────────────
@@ -37,26 +37,17 @@ export const emailApi = {
         if (sender) params.set('sender', sender);
         if (startDate) params.set('startDate', startDate);
         if (endDate) params.set('endDate', endDate);
-        return apiFetch(`/emails?${params}`);
+        return apiFetch(`/emails?${params}`);          // ✅ already correct
     },
-
-    syncEmails: () => apiFetch('/emails/sync', { method: 'POST' }),
-
-    getSyncStatus: () => apiFetch('/emails/sync/status')
+    syncEmails: () => apiFetch('/emails/sync', { method: 'POST' }),     // ✅ correct
+    getSyncStatus: () => apiFetch('/emails/sync/status')                // ✅ correct
 };
 
-// ─────────────────────────────────────────────
-// ANALYTICS
-// ─────────────────────────────────────────────
 export const analyticsApi = {
-    getOverview: () => apiFetch('/emails/analytics/overview'),
-
+    getOverview: () => apiFetch('/emails/analytics/overview'),          // ✅ correct
     getVolume: (period = 'daily') =>
-        apiFetch(`/emails/analytics/volume?period=${period}`),
-
-    getSenders: () => apiFetch('/emails/analytics/senders'),
-
-    getLabels: () => apiFetch('/emails/analytics/labels'),
-
-    getHourly: () => apiFetch('/emails/analytics/hourly')
+        apiFetch(`/emails/analytics/volume?period=${period}`),          // ✅ correct
+    getSenders: () => apiFetch('/emails/analytics/senders'),            // ✅ correct
+    getLabels: () => apiFetch('/emails/analytics/labels'),              // ✅ correct
+    getHourly: () => apiFetch('/emails/analytics/hourly')               // ✅ correct
 };
