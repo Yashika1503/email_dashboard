@@ -14,6 +14,10 @@ export default function LoginPage() {
     const error = params.get('error')
     const expired = params.get('session_expired')
 
+    const handleLogin = () => {
+        window.location.href = "/api/auth/google"; // ✅ correct route
+    };
+
     return (
         <div style={{
             minHeight: '100vh',

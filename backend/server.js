@@ -4,6 +4,9 @@
  */
 
 require('dotenv').config();
+
+console.log("REDIRECT URI:", process.env.GOOGLE_REDIRECT_URI);
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -42,13 +45,15 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS - only allow frontend origin
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: true, // required for session cookies
-    methods: ['GET', 'POST', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type"]
 }));
+
+// handle preflight explicitly
+app.options('*', cors());
 
 app.use(express.json({ limit: '10mb' }));
 
@@ -59,13 +64,12 @@ app.use(session({
     cookie: {
         secure: false,
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
-        sameSite: 'lax'
+        sameSite: 'lax', // keep this
     }
 }));
 
 // ── Routes ────────────────────────────────────────────────────────
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/emails', emailRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
@@ -100,3 +104,4 @@ function start() {
 }
 
 start();
+

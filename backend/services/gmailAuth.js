@@ -37,11 +37,13 @@ const createOAuth2Client = () => {
  * User is redirected here to grant permissions
  */
 function getAuthUrl() {
+    console.log("Using redirect URI:", process.env.GOOGLE_REDIRECT_URI);
+
     const oauth2Client = createOAuth2Client();
     return oauth2Client.generateAuthUrl({
-        access_type: 'offline',      // Get refresh token
+        access_type: 'offline',
         scope: SCOPES,
-        prompt: 'consent',           // Always show consent screen (ensures refresh token)
+        prompt: 'consent',
         include_granted_scopes: true
     });
 }
@@ -115,11 +117,11 @@ async function getUserInfo(oauth2Client) {
 }
 
 module.exports = {
+    createOAuth2Client,
     getAuthUrl,
     exchangeCodeForTokens,
     getAuthenticatedClient,
     storeTokens,
     getUserInfo,
-    SCOPES,
-    createOAuth2Client
+    SCOPES
 };
