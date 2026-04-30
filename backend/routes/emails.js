@@ -51,8 +51,10 @@ router.get('/', (req, res) => {
 
 // POST /api/emails/sync — trigger background sync
 router.post('/sync', (req, res) => {
+    console.log('[Route] Sync hit, session:', req.session?.userId);  // ← ADD
     const userId = req.session.userId;
-    syncEmails(userId); // fire-and-forget
+    const sessionTokens = req.session.tokens;
+    syncEmails(userId, sessionTokens);
     res.json({ status: 'started' });
 });
 

@@ -18,7 +18,7 @@ export default function Layout({ children }) {
         if (syncing) return
         setSyncing(true)
         try {
-            await emailApi.triggerSync()
+            await emailApi.syncEmails()
             setTimeout(() => {
                 window.location.reload()
             }, 3000)
