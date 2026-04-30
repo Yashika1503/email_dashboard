@@ -27,6 +27,8 @@ if (!fs.existsSync(dataDir)) {
     console.log(`Created data directory: ${dataDir}`);
 }
 
+app.set('trust proxy', 1);
+
 // ── Security Middleware ───────────────────────────────────────────
 app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' }
@@ -57,7 +59,8 @@ app.use(session({
     cookie: {
         secure: false,
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 24 * 60 * 60 * 1000,
+        sameSite: 'lax'
     }
 }));
 
@@ -65,6 +68,10 @@ app.use(session({
 app.use('/auth', authRoutes);
 app.use('/api/emails', emailRoutes);
 app.use('/api/analytics', analyticsRoutes);
+
+app.get('/', (req, res) => {
+    res.json({ message: 'Email Dashboard API running' });
+});
 
 // Health check
 app.get('/health', (req, res) => {

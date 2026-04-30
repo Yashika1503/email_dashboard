@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { Mail, BarChart3, LogOut, RefreshCw, User } from 'lucide-react'
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '..//hooks/useAuth'
 import { emailApi } from '../utils/api'
 import { useState } from 'react'
 

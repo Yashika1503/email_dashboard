@@ -32,6 +32,7 @@ router.get('/google/callback', async (req, res) => {
         // Store in session ONLY (no DB)
         req.session.tokens = tokens;
         req.session.user = userInfo;
+        req.session.userId = userInfo.id || userInfo.email;
 
         res.redirect('http://localhost:3000'); // frontend
     } catch (err) {
