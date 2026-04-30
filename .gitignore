@@ -1,0 +1,30 @@
+# Environment files - NEVER commit these
+.env
+*.env.local
+
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+data/
+
+# Logs
+logs/
+*.log
+
+# Build output
+dist/
+build/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Test coverage
+coverage/

@@ -9,12 +9,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const session = require('express-session');
 const rateLimit = require('express-rate-limit');
-const ConnectSQLite = require('connect-sqlite3');
 const path = require('path');
 const fs = require('fs');
 const logger = require('./utils/logger');
-const { initDatabase } = require('./services/database');
-const { scheduleSyncJobs } = require('./services/syncScheduler');
 
 // Route imports
 const authRoutes = require('./routes/auth');
@@ -54,27 +51,15 @@ app.use(cors({
 
 app.use(express.json({ limit: '10mb' }));
 
-// ── Session Configuration with SQLite Store ───────────────────────
-const SQLiteStore = ConnectSQLite(session);
 app.use(session({
-    store: new SQLiteStore({
-        db: 'sessions.db',
-        dir: dataDir,
-        table: 'sessions'
-    }),
-    secret: process.env.SESSION_SECRET || (() => {
-        logger.warn('SESSION_SECRET not set! Using insecure default. Set it in .env');
-        return 'dev-insecure-secret-change-me';
-    })(),
+    secret: process.env.SESSION_SECRET || 'dev-secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
-        httpOnly: true,                                 // no JS access to cookie
-        maxAge: 7 * 24 * 60 * 60 * 1000,              // 7 days
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
-    },
-    name: 'email_dash_sid' // don't use default 'connect.sid'
+        secure: false,
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000
+    }
 }));
 
 // ── Routes ────────────────────────────────────────────────────────
@@ -102,22 +87,10 @@ app.use((err, req, res, _next) => {
 });
 
 // ── Start Server ──────────────────────────────────────────────────
-async function start() {
-    try {
-        await initDatabase();
-        logger.info('Database initialized');
-
-        scheduleSyncJobs();
-        logger.info('Sync scheduler started');
-
-        app.listen(PORT, () => {
-            logger.info(`🚀 Server running on http://localhost:${PORT}`);
-            logger.info(`📧 Email Dashboard API ready`);
-        });
-    } catch (err) {
-        logger.error('Failed to start server:', err);
-        process.exit(1);
-    }
+function start() {
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+    });
 }
 
 start();
