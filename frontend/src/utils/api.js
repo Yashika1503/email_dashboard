@@ -44,10 +44,19 @@ export const analyticsApi = {
 
 // Email API
 export const emailApi = {
-    getEmails: (params = {}) =>
-        api.get('/api/emails', { params }).then(r => r.data),
-    getSyncStatus: () => api.get('/api/emails/sync').then(r => r.data),
-    triggerSync: () => api.post('/api/emails/sync').then(r => r.data)
-}
+    getVolume: async () => {
+        const res = await fetch('/api/analytics/volume', {
+            credentials: 'include'
+        });
+        return res.json();
+    },
+
+    getOverview: async () => {
+        const res = await fetch('/api/analytics/overview', {
+            credentials: 'include'
+        });
+        return res.json();
+    }
+};
 
 export default api

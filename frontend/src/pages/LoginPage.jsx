@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Mail, BarChart3, Shield, Zap } from 'lucide-react'
 import { authApi } from '../utils/api'

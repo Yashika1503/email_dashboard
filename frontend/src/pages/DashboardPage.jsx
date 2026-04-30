@@ -4,7 +4,7 @@ import {
     XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts'
 import { Mail, Users, Eye, TrendingUp, Clock, AlertCircle, RefreshCw } from 'lucide-react'
-import { analyticsApi, emailApi } from '../utils/api'
+import { emailApi } from '../utils/api'
 import { useAuth } from '../hooks/useAuth'
 import { format, parseISO } from 'date-fns'
 
@@ -129,18 +129,18 @@ export default function DashboardPage() {
     }, [])
 
     useEffect(() => {
-        analyticsApi.getVolume(volumePeriod).then(setVolume).catch(console.error)
+        emailApi.getVolume(volumePeriod).then(setVolume).catch(console.error)
     }, [volumePeriod])
 
     async function loadAll() {
         try {
             setLoading(true)
             const [ov, vol, send, lab, hr, sync] = await Promise.all([
-                analyticsApi.getOverview(),
-                analyticsApi.getVolume(volumePeriod),
-                analyticsApi.getSenders(),
-                analyticsApi.getLabels(),
-                analyticsApi.getHourly(),
+                emailApi.getOverview(),
+                emailApi.getVolume(volumePeriod),
+                emailApi.getSenders(),
+                emailApi.getLabels(),
+                emailApi.getHourly(),
                 emailApi.getSyncStatus()
             ])
             setOverview(ov)
