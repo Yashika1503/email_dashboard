@@ -33,7 +33,10 @@ router.get('/google/callback', async (req, res) => {
         req.session.tokens = tokens;
         req.session.user = userInfo;
 
-        res.redirect('http://localhost:3000'); // frontend
+        req.session.save(() => {
+            res.redirect('http://localhost:3000/dashboard');
+        });
+
     } catch (err) {
         console.error(err);
         res.send('Auth failed');
@@ -42,9 +45,10 @@ router.get('/google/callback', async (req, res) => {
 
 // Get current user
 router.get('/me', (req, res) => {
-    if (!req.session.user) {
+    if (!req.session || !req.session.userId) {
         return res.status(401).json({ error: 'Not logged in' });
     }
+
     res.json(req.session.user);
 });
 
