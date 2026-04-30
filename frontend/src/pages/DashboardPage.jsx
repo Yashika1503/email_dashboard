@@ -4,7 +4,7 @@ import {
     XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts'
 import { Mail, Users, Eye, TrendingUp, Clock, AlertCircle, RefreshCw } from 'lucide-react'
-import { authApi, emailApi, analyticsApi } from "../utils";
+import { authApi, emailApi } from "../utils/api";
 import { useAuth } from '../hooks/useAuth'
 import { format, parseISO } from 'date-fns'
 
